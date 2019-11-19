@@ -11,12 +11,43 @@ body {
     background: #105469;
     font-family: 'Open Sans', sans-serif;
 }
+
+.tableDiv{
+    position: static;
+    background-color:#012B39;
+    border: 2px solid white;
+    float:left;
+    width: 75%;
+    height: 80%;
+    overflow: auto;
+
+
+}
+.infoWindow{
+    color:yellow;
+    float: left;
+    border: 3px solid white;
+    width: 25%;
+    height: 80%;
+
+
+}
+
+/*.borderx*/
+/*{*/
+/*    float: bottom;*/
+/*    border: 3px solid white;*/
+
+/*}*/
 table {
 
     background: #012B39;
     border-radius: 0.25em;
     border-collapse: collapse;
+
 }
+
+
 th {
     border-bottom: 1px solid #364043;
     color: #E2B842;
@@ -26,6 +57,7 @@ th {
     text-align: left;
 }
 td {
+    border:1px solid yellow;
     color: #fff;
     font-weight: 400;
     padding: 0.65em 1em;
@@ -39,5 +71,7 @@ tbody tr {
 
 }
 tbody tr:hover {
+
     background: #014055;
 }
+

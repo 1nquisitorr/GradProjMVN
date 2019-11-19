@@ -2,6 +2,9 @@ package crimeApp.crimeBase.model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 @Entity
 @Table(name = "personList")
@@ -17,7 +20,7 @@ public class Person {
 
 
     @Column(name = "LastName")
-    private String LastName;
+    private String surname;
 
 
     @Column(name = "BirthDate")
@@ -44,20 +47,29 @@ public class Person {
         this.name = name;
     }
 
-    public String getLastName() {
-        return LastName;
+    public String getSurname() {
+        return surname;
     }
 
-    public void setLastName(String lastName) {
-        LastName = lastName;
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public Date getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
+    public void setBirthDate(String birthDate) throws ParseException {
+        if (!birthDate.equals("")) {
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+            java.util.Date parsed = format.parse(birthDate);
+            Date sql = new java.sql.Date(parsed.getTime());
+            Calendar c = Calendar.getInstance();
+            c.setTime(sql);
+            c.add(Calendar.DATE, 1);
+            this.birthDate = new Date(c.getTimeInMillis());
+        } else
+            this.birthDate = new Date(1);
     }
 
     public String getCrimes() {

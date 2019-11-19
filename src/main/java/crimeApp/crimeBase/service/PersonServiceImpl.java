@@ -1,11 +1,13 @@
 package crimeApp.crimeBase.service;
 
+import crimeApp.crimeBase.dao.PersonDAOImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import crimeApp.crimeBase.dao.PersonDAO;
 import crimeApp.crimeBase.model.Person;
 
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -56,7 +58,16 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @Transactional
-    public boolean checkPerson(String name) {
-        return personDAO.checkPerson(name);
+    public boolean checkPerson(String name, String surname) {
+        return personDAO.checkPerson(name, surname);
     }
+
+    @Override
+    @Transactional
+
+    public List<Person> findPerson(String findName, String findSurname, Date findDateOfBirth) {
+        return personDAO.findPerson(findName, findSurname, findDateOfBirth);
+    }
+
+
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import crimeApp.crimeBase.model.Person;
 
+import java.sql.Date;
 import java.util.List;
 
 @Repository
@@ -22,7 +23,7 @@ public class PersonDAOImpl implements PersonDAO {
     @Override
     public List<Person> allPersons(int page) {
         Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("from Person").setFirstResult(10 * (page - 1)).setMaxResults(10).list();
+        return session.createQuery("from Person").list();
     }
 
     @Override
@@ -56,11 +57,18 @@ public class PersonDAOImpl implements PersonDAO {
     }
 
     @Override
-    public boolean checkPerson(String name) {
+    public boolean checkPerson(String name, String surname) {
         Session session = sessionFactory.getCurrentSession();
         Query query;
-        query = session.createQuery("from Person where name = :name");
-        query.setParameter("name", name);
+        query = session.createQuery("from Person where name = " + "\'" + name + "\'" + " AND surname = " + "\'" + surname + "\'");
         return query.list().isEmpty();
+    }
+
+    @Override
+    public List<Person> findPerson(String findName, String findSurname, Date findDateOfBirth) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query;
+        query = session.createQuery("from Person where name = " + "\'" + findName + "\'" + " OR surname = " + "\'" + findSurname + "\'" + " OR birthDate = " + "\'" + findDateOfBirth + "\'");
+        return query.list();
     }
 }
