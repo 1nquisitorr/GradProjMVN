@@ -1,11 +1,10 @@
 package crimeApp.crimeBase.service;
 
-import crimeApp.crimeBase.dao.PersonDAOImpl;
+import crimeApp.crimeBase.dao.PersonDAO;
+import crimeApp.crimeBase.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import crimeApp.crimeBase.dao.PersonDAO;
-import crimeApp.crimeBase.model.Person;
 
 import java.sql.Date;
 import java.util.List;

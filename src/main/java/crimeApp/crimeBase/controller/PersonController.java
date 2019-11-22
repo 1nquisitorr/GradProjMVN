@@ -1,20 +1,14 @@
 package crimeApp.crimeBase.controller;
 
+import crimeApp.crimeBase.model.Crime;
+import crimeApp.crimeBase.model.Person;
+import crimeApp.crimeBase.service.CrimeService;
+import crimeApp.crimeBase.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import crimeApp.crimeBase.model.Person;
-import crimeApp.crimeBase.service.PersonService;
 
-
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Controller
@@ -22,11 +16,19 @@ public class PersonController {
     private int page;
 
     private PersonService personService;
+    private CrimeService crimeService;
+
 
     @Autowired
     public void setPersonService(PersonService personService) {
         this.personService = personService;
     }
+
+    @Autowired
+    public void setCrimeService(CrimeService crimeService) {
+        this.crimeService = crimeService;
+    }
+
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView allPersons(@RequestParam(defaultValue = "1") int page) {
@@ -46,20 +48,24 @@ public class PersonController {
         ModelAndView modelAndView = new ModelAndView();
         int personsCount = personService.personsCount();
         List<Person> personList = personService.allPersons(page);
+        List<Crime> crimeList = crimeService.getAllCrimes();
+
         modelAndView.addObject("personAddMenu", true);
         modelAndView.addObject("personMenuValid", false);
         modelAndView.addObject("personsList", personList);
         modelAndView.addObject("personsCount", personsCount);
+        modelAndView.addObject("CrimeActionList", crimeList);
         modelAndView.setViewName("allPersons");
         return modelAndView;
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ModelAndView addPerson(@ModelAttribute("person") Person person) {
+    public ModelAndView addPerson(@ModelAttribute("person") Person person) {// here
         ModelAndView modelAndView = new ModelAndView();
         if (personService.checkPerson(person.getName(), person.getSurname())) {
             modelAndView.setViewName("redirect:/");
             modelAndView.addObject("page", page);
+
             personService.add(person);
         } else {
             modelAndView.addObject("message", "part with name \"" + person.getName() + "\" already exists");
@@ -71,13 +77,16 @@ public class PersonController {
     @RequestMapping(value = "/show/{id}", method = RequestMethod.GET)
     public ModelAndView showPage(@PathVariable("id") int id,
                                  @ModelAttribute("message") String message) {
-
         ModelAndView modelAndView = new ModelAndView();
+
         Person person = personService.getById(id);
+        int CrimeID = Integer.parseInt(person.getCrimes());
+        Crime crime = crimeService.getByID(CrimeID);
         List<Person> personList = personService.allPersons(page);
         int personsCount = personService.personsCount();
         modelAndView.setViewName("allPersons");
         modelAndView.addObject("personsList", personList);
+        modelAndView.addObject("crime", crime);
         modelAndView.addObject("personMenu", person);
         modelAndView.addObject("personMenuValid", true);
         modelAndView.addObject("personsCount", personsCount);
@@ -87,21 +96,23 @@ public class PersonController {
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public ModelAndView editPage(@PathVariable("id") int id,
                                  @ModelAttribute("message") String message) {
+        ModelAndView modelAndView;
         Person person = personService.getById(id);
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("editPage");
-        modelAndView.addObject("person", person);
+        modelAndView = StandartRequest(person);
         return modelAndView;
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public ModelAndView editPerson(@ModelAttribute("person") Person person) {
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView;
         if (personService.checkPerson(person.getName(), person.getSurname()) || personService.getById(person.getId()).getName().equals(person.getName())) {
-            modelAndView.setViewName("redirect:/");
-            modelAndView.addObject("page", page);
             personService.edit(person);
+
+            modelAndView = StandartRequest(person);
+
         } else {
+
+            modelAndView = new ModelAndView();
             modelAndView.addObject("message", "part with name \"" + person.getName() + "\" already exists");
             modelAndView.setViewName("redirect:/edit/" + +person.getId());
         }
@@ -133,4 +144,24 @@ public class PersonController {
 
     }
 
+
+    public ModelAndView StandartRequest(Person person) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        int CrimeID = Integer.parseInt(person.getCrimes());
+        Crime crime = crimeService.getByID(CrimeID);
+        List<Crime> crimeList = crimeService.getAllCrimes();
+        modelAndView.addObject("crime", crime);
+        modelAndView.addObject("personMenu", person);
+        modelAndView.addObject("personMenuValid", true);
+        modelAndView.addObject("personAddMenu", true);
+        modelAndView.addObject("CrimeActionList", crimeList);
+        modelAndView.addObject("person", person);
+        modelAndView.setViewName("allPersons");
+        return modelAndView;
+    }
+
+
 }
+
+

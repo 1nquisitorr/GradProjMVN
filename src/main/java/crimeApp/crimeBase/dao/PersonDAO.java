@@ -6,7 +6,7 @@ import java.sql.Date;
 import java.util.List;
 
 public interface PersonDAO {
-    List<Person> allPersons(int page);
+    List allPersons(int page);
 
     void add(Person person);
 

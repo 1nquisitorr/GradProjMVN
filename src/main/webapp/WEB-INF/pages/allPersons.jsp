@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="th" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
+
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -22,9 +24,11 @@
 <div class="tableDiv">
     <c:choose>
         <c:when test="${personMenuValid == true}">
-            <h3 style="color: yellow">${personMenu.name}</h3>
-            <h3 style="color: yellow">${personMenu.surname}</h3>
+            <h1 style="color: yellow">${personMenu.name} ${personMenu.surname}</h1>
+            <%--            <h1 style="color: yellow">${personMenu.surname}</h1>--%>
             <h3 style="color: yellow">${personMenu.birthDate}</h3>
+            <h2 style="color: yellow">${crime.description}</h2>
+            <h3 style="color: yellow">${crime.descriptionFull}</h3>
             <a style="color: yellow" href="/">Back to List</a>
         </c:when>
         <c:otherwise>
@@ -89,14 +93,23 @@
                 <p><input type="text" name="surname" placeholder="Last Name" value="${person.surname}" maxlength="30"
                           required>
                 <p><input type="date" id="datepicker" name="birthDate"></p>
-                <p><input type="text" name="Crimes" placeholder="Crimes" value="${person.crimes}" maxlength="10"
-                          required>
+
+
+                <p><select name="Crimes">
+                    <c:forEach var="crimes" items="${CrimeActionList}">
+                        <option value=${crimes.id}>${crimes.description}</option>
+                        <h3>${crimes.id}</h3>>
+                    </c:forEach>
+                </select></p>
+
+
                 <p>
                     <c:set value="add" var="add"/>
                     <c:set value="edit" var="edit"/>
                     <input type="submit" value="${empty person.name ? add : edit}">
                 </p>
                 <p>${message}</p>
+
             </form>
             <a style="color: yellow" href="/"> Check Person</a>
 
@@ -117,6 +130,7 @@
 
 </div>
 <div class="border">
+
 
 </div>
 

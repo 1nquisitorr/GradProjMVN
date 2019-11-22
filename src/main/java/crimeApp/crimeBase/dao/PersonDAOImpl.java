@@ -1,11 +1,11 @@
 package crimeApp.crimeBase.dao;
 
+import crimeApp.crimeBase.model.Person;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import crimeApp.crimeBase.model.Person;
 
 import java.sql.Date;
 import java.util.List;
@@ -71,4 +71,6 @@ public class PersonDAOImpl implements PersonDAO {
         query = session.createQuery("from Person where name = " + "\'" + findName + "\'" + " OR surname = " + "\'" + findSurname + "\'" + " OR birthDate = " + "\'" + findDateOfBirth + "\'");
         return query.list();
     }
+
+
 }

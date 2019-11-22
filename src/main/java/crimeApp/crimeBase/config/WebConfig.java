@@ -1,7 +1,6 @@
 package crimeApp.crimeBase.config;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +17,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @EnableAutoConfiguration
 @ComponentScan(basePackages = "crimeApp.crimeBase")
 public class WebConfig implements WebMvcConfigurer {
+
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
