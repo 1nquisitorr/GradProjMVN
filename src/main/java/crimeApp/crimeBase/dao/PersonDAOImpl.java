@@ -8,11 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
 public class PersonDAOImpl implements PersonDAO {
     private SessionFactory sessionFactory;
+    private List<Person> person;
+
+    public PersonDAOImpl() {
+        this.person = Arrays.asList(new Person("Alex", "Ivanov",new Date(1), "126"));
+    }
+
 
     @Autowired
     public void setSessionFactory(SessionFactory sessionFactory) {
@@ -70,6 +77,11 @@ public class PersonDAOImpl implements PersonDAO {
         Query query;
         query = session.createQuery("from Person where name = " + "\'" + findName + "\'" + " OR surname = " + "\'" + findSurname + "\'" + " OR birthDate = " + "\'" + findDateOfBirth + "\'");
         return query.list();
+    }
+
+    @Override
+    public Person getPersonByName(String name) throws Exception {
+      return person.stream().filter(u->u.getName().equals(name)).findAny().orElse(null);
     }
 
 

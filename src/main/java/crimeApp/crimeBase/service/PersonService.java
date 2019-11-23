@@ -21,4 +21,6 @@ public interface PersonService {
     boolean checkPerson(String name, String surname);
 
     List<Person> findPerson(String findName, String findSurname, Date findDateOfBirth);
+
+    boolean checkPersonPrence(Person person) throws Exception;
 }

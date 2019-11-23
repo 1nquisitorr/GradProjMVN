@@ -20,5 +20,7 @@ public interface PersonDAO {
 
     List<Person> findPerson(String findName, String findSurname, Date findDateOfBirth);
 
+    Person getPersonByName(String name) throws Exception;
+
     boolean checkPerson(String name, String surname);
 }

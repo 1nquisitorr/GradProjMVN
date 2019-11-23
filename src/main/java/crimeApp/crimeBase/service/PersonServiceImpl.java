@@ -14,6 +14,10 @@ public class PersonServiceImpl implements PersonService {
 
     private PersonDAO personDAO;
 
+    public PersonServiceImpl(PersonDAO personDAO) {
+        this.personDAO = personDAO;
+    }
+
     @Autowired
     public void setPersonDAO(PersonDAO personDAO) {
         this.personDAO = personDAO;
@@ -66,6 +70,14 @@ public class PersonServiceImpl implements PersonService {
 
     public List<Person> findPerson(String findName, String findSurname, Date findDateOfBirth) {
         return personDAO.findPerson(findName, findSurname, findDateOfBirth);
+    }
+
+    @Override
+    public boolean checkPersonPrence(Person person) throws Exception {
+
+        Person p = personDAO.getPersonByName(person.getName());
+
+        return p!=null;
     }
 
 

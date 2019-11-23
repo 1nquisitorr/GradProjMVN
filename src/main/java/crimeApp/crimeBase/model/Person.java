@@ -31,6 +31,18 @@ public class Person {
     private String Crimes;
 
 
+    public Person(String name, String surname, Date birthDate, String crimes) {
+        this.name = name;
+        this.surname = surname;
+        this.birthDate = birthDate;
+        Crimes = crimes;
+    }
+
+    public Person() {
+    }
+
+
+
     public int getId() {
         return id;
     }
