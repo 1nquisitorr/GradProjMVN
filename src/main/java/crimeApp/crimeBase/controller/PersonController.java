@@ -6,6 +6,7 @@ import crimeApp.crimeBase.service.CrimeService;
 import crimeApp.crimeBase.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -145,6 +146,23 @@ public class PersonController {
     }
 
 
+    @RequestMapping(value = "/start", method = RequestMethod.GET)
+    public ModelAndView start(@ModelAttribute("message") String message) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.setViewName("index");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public ModelAndView login(@ModelAttribute("message") String message) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.setViewName("login");
+        return modelAndView;
+    }
+
+
     public ModelAndView StandartRequest(Person person) {
 
         ModelAndView modelAndView = new ModelAndView();
@@ -160,7 +178,6 @@ public class PersonController {
         modelAndView.setViewName("allPersons");
         return modelAndView;
     }
-
 
 }
 
