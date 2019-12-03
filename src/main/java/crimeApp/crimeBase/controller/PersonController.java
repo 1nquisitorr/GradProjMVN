@@ -6,7 +6,6 @@ import crimeApp.crimeBase.service.CrimeService;
 import crimeApp.crimeBase.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -36,7 +35,7 @@ public class PersonController {
         List<Person> personList = personService.allPersons(page);
         int personsCount = personService.personsCount();
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("allPersons");
+        modelAndView.setViewName("user/allPersons");
         modelAndView.addObject("personsList", personList);
         modelAndView.addObject("personsCount", personsCount);
         modelAndView.addObject("personAddMenu", false);
@@ -56,7 +55,7 @@ public class PersonController {
         modelAndView.addObject("personsList", personList);
         modelAndView.addObject("personsCount", personsCount);
         modelAndView.addObject("CrimeActionList", crimeList);
-        modelAndView.setViewName("allPersons");
+        modelAndView.setViewName("user/allPersons");
         return modelAndView;
     }
 
@@ -85,7 +84,7 @@ public class PersonController {
         Crime crime = crimeService.getByID(CrimeID);
         List<Person> personList = personService.allPersons(page);
         int personsCount = personService.personsCount();
-        modelAndView.setViewName("allPersons");
+        modelAndView.setViewName("user/allPersons");
         modelAndView.addObject("personsList", personList);
         modelAndView.addObject("crime", crime);
         modelAndView.addObject("personMenu", person);
@@ -138,27 +137,18 @@ public class PersonController {
     public ModelAndView CheckPerson(@ModelAttribute("person") Person person) {
         List<Person> personList = personService.findPerson(person.getName(), person.getSurname(), person.getBirthDate());
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("allPersons");
+        modelAndView.setViewName("user/allPersons");
         modelAndView.addObject("personsList", personList);
         modelAndView.addObject("personsCount", personList.size());
         return modelAndView;
 
     }
 
-
-    @RequestMapping(value = "/start", method = RequestMethod.GET)
-    public ModelAndView start(@ModelAttribute("message") String message) {
+    @RequestMapping(value = "/admin", method = RequestMethod.GET)
+    public ModelAndView admin(@ModelAttribute("message") String message) {
         ModelAndView modelAndView = new ModelAndView();
 
-        modelAndView.setViewName("index");
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ModelAndView login(@ModelAttribute("message") String message) {
-        ModelAndView modelAndView = new ModelAndView();
-
-        modelAndView.setViewName("login");
+        modelAndView.setViewName("admin/admin");
         return modelAndView;
     }
 
@@ -175,7 +165,7 @@ public class PersonController {
         modelAndView.addObject("personAddMenu", true);
         modelAndView.addObject("CrimeActionList", crimeList);
         modelAndView.addObject("person", person);
-        modelAndView.setViewName("allPersons");
+        modelAndView.setViewName("user/allPersons");
         return modelAndView;
     }
 

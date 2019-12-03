@@ -1,6 +1,6 @@
 package crimeApp.crimeBase.config;
 
-import crimeApp.crimeBase.service.UserDetailsServiceImpl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +10,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
@@ -17,41 +20,33 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private DataSource dataSource;
 
     @Autowired
-    public void registerGlobalAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(getShaPasswordEncoder());
+
+    public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
+
+        auth.jdbcAuthentication().dataSource(dataSource)
+                .usersByUsernameQuery("select username,password, enabled from users where username=?")
+                .authoritiesByUsernameQuery("select username,role from user_roles where username=?");// HASH!!!!
     }
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf()
-                .disable()
-                .authorizeRequests()
-                .antMatchers("/resources/**", "/**").permitAll()
-                .anyRequest().permitAll()
-                .and();
 
-        http.formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/j_spring_security_check")
-                .failureUrl("/login?error")
-                .usernameParameter("j_username")
-                .passwordParameter("j_password")
-                .permitAll();
+        http.authorizeRequests()
+                .antMatchers("/user/**", "/admin/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/user/**").access("hasRole('ROLE_USER')")
+                .antMatchers("/**").authenticated()
+                .and().formLogin().and().exceptionHandling().accessDeniedPage("/WEB-INF/pages/accessDenied.jsp");
 
-        http.logout()
-                .permitAll()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
-                .invalidateHttpSession(true);
     }
 
+
+
     @Bean
-    public ShaPasswordEncoder getShaPasswordEncoder(){
+    public ShaPasswordEncoder getShaPasswordEncoder() {
         return new ShaPasswordEncoder();
     }
 
