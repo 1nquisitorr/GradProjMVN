@@ -2,6 +2,7 @@ package crimeApp.crimeBase.service;
 
 import crimeApp.crimeBase.dao.PersonDAO;
 import crimeApp.crimeBase.model.Person;
+import crimeApp.crimeBase.model.UserLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,7 +78,7 @@ public class PersonServiceImpl implements PersonService {
 
         Person p = personDAO.getPersonByName(person.getName());
 
-        return p!=null;
+        return p != null;
     }
 
 

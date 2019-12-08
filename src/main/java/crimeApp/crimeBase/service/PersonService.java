@@ -1,6 +1,7 @@
 package crimeApp.crimeBase.service;
 
 import crimeApp.crimeBase.model.Person;
+import crimeApp.crimeBase.model.UserLog;
 
 import java.sql.Date;
 import java.util.List;
@@ -23,4 +24,5 @@ public interface PersonService {
     List<Person> findPerson(String findName, String findSurname, Date findDateOfBirth);
 
     boolean checkPersonPrence(Person person) throws Exception;
+
 }

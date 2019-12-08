@@ -1,6 +1,7 @@
 package crimeApp.crimeBase.dao;
 
 import crimeApp.crimeBase.model.Person;
+import crimeApp.crimeBase.model.UserLog;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -15,6 +16,7 @@ import java.util.List;
 public class PersonDAOImpl implements PersonDAO {
     private SessionFactory sessionFactory;
     private List<Person> person;
+    private String userLog;
 
     public PersonDAOImpl() {
         this.person = Arrays.asList(new Person("Alex", "Ivanov",new Date(1), "126"));

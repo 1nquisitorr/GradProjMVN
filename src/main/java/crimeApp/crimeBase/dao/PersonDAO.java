@@ -1,6 +1,7 @@
 package crimeApp.crimeBase.dao;
 
 import crimeApp.crimeBase.model.Person;
+import crimeApp.crimeBase.model.UserLog;
 
 import java.sql.Date;
 import java.util.List;
@@ -23,4 +24,5 @@ public interface PersonDAO {
     Person getPersonByName(String name) throws Exception;
 
     boolean checkPerson(String name, String surname);
+
 }

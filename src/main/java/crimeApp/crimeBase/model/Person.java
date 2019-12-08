@@ -30,7 +30,6 @@ public class Person {
     @Column(name = "Crimes")
     private String Crimes;
 
-
     public Person(String name, String surname, Date birthDate, String crimes) {
         this.name = name;
         this.surname = surname;
@@ -39,6 +38,7 @@ public class Person {
     }
 
     public Person() {
+
     }
 
 
