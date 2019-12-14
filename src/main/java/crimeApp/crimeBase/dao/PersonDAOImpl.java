@@ -18,9 +18,9 @@ public class PersonDAOImpl implements PersonDAO {
     private List<Person> person;
     private String userLog;
 
-    public PersonDAOImpl() {
-        this.person = Arrays.asList(new Person("Alex", "Ivanov",new Date(1), "126"));
-    }
+//    public PersonDAOImpl() {
+//        this.person = Arrays.asList(new Person("Alex", "Ivanov",new Date(1), "126"));
+//    }
 
 
     @Autowired

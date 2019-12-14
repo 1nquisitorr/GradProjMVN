@@ -10,7 +10,7 @@
 </head>
 
 <body>
-<div class="tableDiv">
+<div class="tableDiv" style="width: 100%">
     <table>
         <a href="/all" style="color: yellow; font-size: 35px; margin-left: 50%;">Persons </a>
         <p style="font-size: 20px; color: yellow; margin-left: 53%">V. 0.1</p>

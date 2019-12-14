@@ -30,10 +30,20 @@ public class Person {
     @Column(name = "Crimes")
     private String Crimes;
 
-    public Person(String name, String surname, Date birthDate, String crimes) {
+    @Column(name = "photo")
+    private byte[] photo;
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
+    }
+
+    public Person(String name, String surname, String crimes) {
         this.name = name;
         this.surname = surname;
-        this.birthDate = birthDate;
         Crimes = crimes;
     }
 

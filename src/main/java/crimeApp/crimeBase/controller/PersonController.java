@@ -5,16 +5,20 @@ import crimeApp.crimeBase.model.Person;
 import crimeApp.crimeBase.model.UserLog;
 import crimeApp.crimeBase.service.CrimeService;
 import crimeApp.crimeBase.service.PersonService;
-
 import crimeApp.crimeBase.service.UserLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.sql.Date;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Base64;
 import java.util.List;
 
 @Controller
@@ -25,6 +29,10 @@ public class PersonController {
     private CrimeService crimeService;
     private UserLogService userLogService;
     private Authentication authentication;
+
+
+    @Autowired
+    private HttpServletRequest request;
 
     @Autowired
     public void setPersonService(PersonService personService) {
@@ -37,7 +45,9 @@ public class PersonController {
     }
 
     @Autowired
-    public void setUserLogService(UserLogService userLogService) { this.userLogService=userLogService; }
+    public void setUserLogService(UserLogService userLogService) {
+        this.userLogService = userLogService;
+    }
 
 
     @ResponseBody
@@ -46,10 +56,33 @@ public class PersonController {
     }
 
 
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public ModelAndView add(@RequestParam("file") MultipartFile file, ModelMap modelMap, @RequestParam String name,
+                            String surname, String date, String crime) throws IOException, ParseException {
+
+        Person person = new Person(name, surname, crime);
+        person.setBirthDate(date);
+        person.setPhoto(file.getBytes());
+
+        ModelAndView modelAndView = new ModelAndView();
+        if (personService.checkPerson(person.getName(), person.getSurname())) {
+            modelAndView.setViewName("redirect:/all");
+            modelAndView.addObject("page", page);
+            log("add", "added Person " + person.getName() + " " + person.getSurname());
+            personService.add(person);
+        } else {
+            modelAndView.addObject("message", "part with name \"" + person.getName() + "\" already exists");
+            modelAndView.setViewName("redirect:/add");
+        }
+
+        return modelAndView;
+    }
+
+
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ModelAndView allPersons(@RequestParam(defaultValue = "1") int page) {
         List<Person> personList = personService.allPersons(page);
-        log("all","look");
+        log("all", "look");
         int personsCount = personService.personsCount();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("allPersons");
@@ -66,7 +99,7 @@ public class PersonController {
         int personsCount = personService.personsCount();
         List<Person> personList = personService.allPersons(page);
         List<Crime> crimeList = crimeService.getAllCrimes();
-        log("add","visit add page");
+        log("add", "visit add page");
         modelAndView.addObject("personAddMenu", true);
         modelAndView.addObject("personMenuValid", false);
         modelAndView.addObject("personsList", personList);
@@ -77,22 +110,6 @@ public class PersonController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ModelAndView addPerson(@ModelAttribute("person") Person person) {// here
-
-        ModelAndView modelAndView = new ModelAndView();
-        if (personService.checkPerson(person.getName(), person.getSurname())) {
-            modelAndView.setViewName("redirect:/all");
-            modelAndView.addObject("page", page);
-            log("add","added Person "+person.getName()+" "+person.getSurname());
-
-            personService.add(person);
-        } else {
-            modelAndView.addObject("message", "part with name \"" + person.getName() + "\" already exists");
-            modelAndView.setViewName("redirect:/add");
-        }
-        return modelAndView;
-    }
 
     @RequestMapping(value = "/show/{id}", method = RequestMethod.GET)
     public ModelAndView showPage(@PathVariable("id") int id,
@@ -103,8 +120,15 @@ public class PersonController {
         Crime crime = crimeService.getByID(CrimeID);
         List<Person> personList = personService.allPersons(page);
         int personsCount = personService.personsCount();
-        log("show","Show Person with ID "+String.valueOf(id));
+
+
+        byte[] imageBytes = person.getPhoto();
+        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+        modelAndView.addObject("img", base64Image);
+
+        log("show", "Show Person with ID " + String.valueOf(id));
         modelAndView.setViewName("allPersons");
+
         modelAndView.addObject("personsList", personList);
         modelAndView.addObject("crime", crime);
         modelAndView.addObject("personMenu", person);
@@ -116,27 +140,29 @@ public class PersonController {
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public ModelAndView editPage(@PathVariable("id") int id,
                                  @ModelAttribute("message") String message) {
-        log("/edit","Edit Page Person with ID "+String.valueOf(id));
-        ModelAndView modelAndView;
+        log("/edit", "Edit Page Person with ID " + String.valueOf(id));
         Person person = personService.getById(id);
-        modelAndView = StandartRequest(person);
+        byte[] imageBytes = person.getPhoto();
+        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+        ModelAndView modelAndView = StandartRequest(person);
+        modelAndView.addObject("img", base64Image);
         return modelAndView;
     }
 
+
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
-    public ModelAndView editPerson(@ModelAttribute("person") Person person) {
-        ModelAndView modelAndView;
-        if (personService.checkPerson(person.getName(), person.getSurname()) || personService.getById(person.getId()).getName().equals(person.getName())) {
-            log("/edit","Edited Person "+person.getSurname()+" "+person.getName());
-            personService.edit(person);
-            modelAndView = StandartRequest(person);
+    public ModelAndView edit(@RequestParam("file") MultipartFile file, ModelMap modelMap, @RequestParam String name,
+                             String surname, String date, String crime, int id) throws IOException, ParseException {
 
-        } else {
+        ModelAndView modelAndView = new ModelAndView();
+        Person person = new Person(name, surname, crime);
+        person.setId(id);
+        person.setBirthDate(date);
+        person.setPhoto(file.getBytes());
 
-            modelAndView = new ModelAndView();
-            modelAndView.addObject("message", "part with name \"" + person.getName() + "\" already exists");
-            modelAndView.setViewName("redirect:/edit/" + +person.getId());
-        }
+        log("/edit", "Edited Person " + person.getSurname() + " " + person.getName());
+        personService.edit(person);
+        modelAndView.setViewName("redirect:/edit/" + +person.getId());
         return modelAndView;
     }
 
@@ -146,7 +172,7 @@ public class PersonController {
         int personsCount = personService.personsCount();
         int page = ((personsCount - 1) % 10 == 0 && personsCount > 10 && this.page == (personsCount + 9) / 10) ?
                 this.page - 1 : this.page;
-        log("/delete","Deleted Person with ID"+String.valueOf(id));
+        log("/delete", "Deleted Person with ID" + String.valueOf(id));
         modelAndView.setViewName("redirect:/all");
         modelAndView.addObject("page", page);
         Person person = personService.getById(id);
@@ -158,7 +184,7 @@ public class PersonController {
     @RequestMapping(value = "/checkPerson", method = RequestMethod.POST)
     public ModelAndView CheckPerson(@ModelAttribute("person") Person person) {
         List<Person> personList = personService.findPerson(person.getName(), person.getSurname(), person.getBirthDate());
-        log("/checkPerson","Checked Person "+person.getName()+" "+person.getSurname());
+        log("/checkPerson", "Checked Person " + person.getName() + " " + person.getSurname());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("allPersons");
         modelAndView.addObject("personsList", personList);
@@ -171,9 +197,17 @@ public class PersonController {
     public ModelAndView admin(@ModelAttribute("message") String message) {
         ModelAndView modelAndView = new ModelAndView();
         List<UserLog> userLogs = userLogService.usersActions();
-
         modelAndView.addObject("LogList", userLogs);
         modelAndView.setViewName("admin/admin");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/upload", method = RequestMethod.GET)
+    public ModelAndView upload(@ModelAttribute("message") String message) {
+        ModelAndView modelAndView = new ModelAndView();
+        Person person = new Person();
+        modelAndView.addObject("person", person);
+        modelAndView.setViewName("admin/upload");
         return modelAndView;
     }
 
@@ -192,7 +226,7 @@ public class PersonController {
     }
 
 
-    public ModelAndView StandartRequest(Person person) {
+    private ModelAndView StandartRequest(Person person) {
 
         ModelAndView modelAndView = new ModelAndView();
         int CrimeID = Integer.parseInt(person.getCrimes());
@@ -208,12 +242,11 @@ public class PersonController {
         return modelAndView;
     }
 
-    public void log(String pageName, String action)
-    {
-        authentication=SecurityContextHolder.getContext().getAuthentication();
-        String name=currentUserName(authentication);
+    private void log(String pageName, String action) {
+        authentication = SecurityContextHolder.getContext().getAuthentication();
+        String name = currentUserName(authentication);
         java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
-        userLogService.add(new UserLog(name,pageName, action, sqlDate));
+        userLogService.add(new UserLog(name, pageName, action, sqlDate));
     }
 
 }
