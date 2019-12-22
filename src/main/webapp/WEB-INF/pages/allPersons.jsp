@@ -20,78 +20,243 @@
             $("#datepicker2").datepicker();
         });
     </script>
+
+
 </head>
+
 <body class="body">
+<ul id="menu-bar">
+    <li class="active"><a href="/all">Home</a></li>
+    <c:if test="${pageContext.request.isUserInRole('ROLE_ADMIN')}">
+        <li><a href="/add">Add new Person</a></li>
+    </c:if>
+    <li><a href="#">All Photos</a></li>
+    <c:if test="${pageContext.request.isUserInRole('ROLE_ADMIN')}">
+        <li><a href="/admin">Log Page</a></li>
+    </c:if>
+    <p class="loggedAs">Logged as ${pageContext.request.remoteUser} <a href="/login?logout">logout</a></p>
+
+</ul>
 
 <div class="infoWindow">
 
-    <p>Logged as <c:out value="${pageContext.request.remoteUser}"/></p>
-    <a href="/upload">upload</a>
-    <a href="/admin">upload</a>
-    <form action="/logout" method="post">
-        <input type="submit" value="Log out"/>
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-    </form>
+
+    <%--            <form action="${empty person.name ? addUrl : editUrl}?${_csrf.parameterName}=${_csrf.token}" method="POST"--%>
+    <%--                  enctype="multipart/form-data">--%>
+    <%--                <c:choose>--%>
+    <%--                    <c:when test="${!empty person.name}">--%>
+    <%--                        <p>Edit Person</p>--%>
+    <%--                        <input type="hidden" name="id" value="${person.id}">--%>
+    <%--                    </c:when>--%>
+    <%--                    <c:otherwise>--%>
+    <%--                        <p>Add new Person: </p>--%>
+    <%--                    </c:otherwise>--%>
+    <%--                </c:choose>--%>
+
+    <%--                <p><input class="inputString" type="text" name="name" placeholder="Name" value="${person.name}"--%>
+    <%--                          maxlength="30" required>--%>
+    <%--                <p><input class="inputString" type="text" name="surname" placeholder="Last Name"--%>
+    <%--                          value="${person.surname}" maxlength="30"--%>
+    <%--                          required>--%>
+    <%--                <p><input type="date" id="datepicker" name="date"></p>--%>
+    <%--                <p><select name="crime">--%>
+    <%--                    <c:forEach var="crime" items="${CrimeActionList}">--%>
+    <%--                        <option value=${crime.id}>${crime.description}</option>--%>
+    <%--                        &lt;%&ndash;                        <h3>${crime.id}</h3>>&ndash;%&gt;--%>
+    <%--                    </c:forEach>--%>
+    <%--                </select></p>--%>
+
+    <%--                <p><select name="connections">--%>
+    <%--                    <c:forEach var="connections" items="${personsList}">--%>
+    <%--                        <option value=${connections.id}>${connections.surname}</option>--%>
+    <%--                    </c:forEach>--%>
+    <%--                </select></p>--%>
+    <%--                <p>--%>
+    <%--                    <c:set value="add" var="add"/>--%>
+    <%--                    <c:set value="edit" var="edit"/>--%>
+    <%--                    <input type="file" name="file"/>--%>
+
+    <%--                    <input type="submit" value="${empty person.name ? add : edit}">--%>
+    <%--                </p>--%>
+    <%--                <p>${message}</p>--%>
+
+    <%--                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>--%>
+    <%--            </form>--%>
+
     <c:choose>
-        <c:when test="${personAddMenu == true}">
-            <c:url value="/add" var="addUrl"/>
-            <c:url value="/edit" var="editUrl"/>
-            <form action="${empty person.name ? addUrl : editUrl}?${_csrf.parameterName}=${_csrf.token}" method="POST"
-                  enctype="multipart/form-data">
-                <c:choose>
-                    <c:when test="${!empty person.name}">
-                        <p>Edit Person</p>
-                        <input type="hidden" name="id" value="${person.id}">
-                    </c:when>
-                    <c:otherwise>
-                        <p>Add new Person: </p>
-                    </c:otherwise>
-                </c:choose>
+    <c:when test="${personAddMenu == true}">
+    <c:url value="/add" var="addUrl"/>
+    <c:url value="/edit" var="editUrl"/>
+    <div class="form-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-offset-3 col-md-6">
+                    <form class="form-horizontal"
+                          action="${empty person.name ? addUrl : editUrl}?${_csrf.parameterName}=${_csrf.token}"
+                          method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
 
-                <p><input type="text" name="name" placeholder="Name" value="${person.name}" maxlength="30" required>
-                <p><input type="text" name="surname" placeholder="Last Name" value="${person.surname}" maxlength="30"
-                          required>
-                <p><input type="date" id="datepicker" name="date"></p>
-                <p><select name="crime">
-                    <c:forEach var="crime" items="${CrimeActionList}">
-                        <option value=${crime.id}>${crime.description}</option>
-                        <h3>${crime.id}</h3>>
-                    </c:forEach>
-                </select></p>
-                <p>
-                    <c:set value="add" var="add"/>
-                    <c:set value="edit" var="edit"/>
-                    <input type="file" name="file"/>
 
-                    <input type="submit" value="${empty person.name ? add : edit}">
-                </p>
-                <p>${message}</p>
+                            <c:choose>
+                                <c:when test="${!empty person.name}">
+                                    <p>Edit Person</p>
+                                    <input type="hidden" name="id" value="${person.id}">
+                                    <c:set var="date" value="${person.birthDate}"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <p>Add new Person: </p>
+                                    <c:set var="date" value="01/01/1990"/>
+                                </c:otherwise>
+                            </c:choose>
 
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-            </form>
-            <c:if test="${pageContext.request.isUserInRole('ROLE_ADMIN')}">
-                <a style="color: yellow" href="/all"> Check Person</a>
-            </c:if>
+
+                            <label class="col-md-3 col-sm-2 control-label" for="${person.name}">First
+                                Name</label>
+                            <div class="col-md-9 col-sm-10">
+                                <input type="text" class="form-control" name="name" value="${person.name}"
+                                       placeholder="Eg.Steve" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 col-sm-2 control-label" for="${person.surname}">Last Name</label>
+                            <div class="col-md-9 col-sm-10">
+                                <input type="text" class="form-control" name="surname" value="${person.surname}"
+                                       maxlength="30"
+                                       placeholder="Eg.Smith" required>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <p><input class="form-control" type="text" id="datepicker" name="date"
+                                      placeholder=${date}></p>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-sm-2 control-label">Crimes</label>
+                            <div class="col-md-9 col-sm-10">
+                                <p><label>
+                                    <select class="form-control" name="crime">
+                                        <c:forEach var="crime" items="${CrimeActionList}">
+                                            <option value=${crime.id}>${crime.description}</option>
+                                        </c:forEach>
+                                    </select>
+                                </label></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 col-sm-2 control-label">Connections</label>
+                            <div class="col-md-9 col-sm-10">
+                                <p><label>
+                                    <select class="form-control" name="connections">
+                                        <c:forEach var="connections" items="${personsList}">
+                                            <option value=${connections.id}>${connections.surname}</option>
+                                        </c:forEach>
+                                    </select>
+                                </label></p>
+                            </div>
+                        </div>
+
+                        <p>
+                            <c:set value="add" var="add"/>
+                            <c:set value="edit" var="edit"/>
+                            <input type="file" class="btn btn-default" name="file"/>
+                        </p>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-sm-offset-2 col-sm-3">
+                                <input type="submit" class="btn btn-default" value="${empty person.name ? add : edit}">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
         </c:when>
         <c:otherwise>
-            <form action="/checkPerson" name="person" method="POST">
-                <h3>Check Person</h3>
-                <p><input type="text" name="name" placeholder="Name" value="${Person.name}" maxlength="30">
-                <p><input type="text" name="surname" placeholder="Last Name" value="${person.surname}" maxlength="30">
-                <p><input type="date" id="datepicker2" name="birthDate"></p>
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                <input type="submit" value="Submit">
-            </form>
-            <c:if test="${pageContext.request.isUserInRole('ROLE_ADMIN')}">
-                <a style="color: yellow" href="/add"> Add Person</a>
-            </c:if>
+            <%--            <form action="/checkPerson" name="person" method="POST">--%>
+
+            <%--                <p><input class="inputString" type="text" name="name" placeholder="Name" value="${Person.name}"--%>
+            <%--                          maxlength="30">--%>
+            <%--                <p><input class="inputString" type="text" name="surname" placeholder="Last Name"--%>
+            <%--                          value="${person.surname}" maxlength="30">--%>
+            <%--                <p><input type="date" id="datepicker2" name="birthDate"></p>--%>
+            <%--                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>--%>
+            <%--                <input class="button" type="submit" value="Check Person">--%>
+            <%--            </form>--%>
+
+
+            <div class="form-bg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-offset-3 col-md-6">
+                            <form class="form-horizontal"
+                                  action="/checkPerson" name="person" method="POST">
+                                <div class="form-group">
+                                    <label class="col-md-3 col-sm-2 control-label" for="${person.name}">First
+                                        Name</label>
+                                    <div class="col-md-9 col-sm-10">
+                                        <input type="text" class="form-control" name="name" value="${person.name}"
+                                               placeholder="Eg.Steve">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-3 col-sm-2 control-label" for="${person.surname}">Last
+                                        Name</label>
+                                    <div class="col-md-9 col-sm-10">
+                                        <input type="text" class="form-control" name="surname" value="${person.surname}"
+                                               maxlength="30"
+                                               placeholder="Eg.Smith">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <p><input class="form-control" type="text" id="datepicker2" name="birthDate"
+                                              placeholder="01/01/2000"></p>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-offset-3 col-sm-offset-2 col-sm-3">
+                                        <input type="submit" class="btn btn-default"
+                                               value="Check Person">
+                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </c:otherwise>
+        </c:choose>
 
-    </c:choose>
+
+<%--        &lt;%&ndash;WANTED CARD&ndash;%&gt;--%>
+<%--        <c:choose>--%>
+<%--            <c:when test="${personAddMenu !=true}">--%>
+<%--                <div class="wantedClass">--%>
+<%--                    <h1 style="color: yellow; text-align: center">Wanted</h1>--%>
+<%--                    <img src="data:image/jpeg;base64, ${imgs}">--%>
+<%--                    <h5>${wanted.name} ${wanted.surname}</h5>--%>
+<%--                    <h5>Date of Birth: ${wanted.birthDate}</h5>--%>
+<%--                </div>--%>
+<%--            </c:when>--%>
+<%--        </c:choose>--%>
+
+        <%--WANTED CARD--%>
 
 
+    </div>
 </div>
 
+
+<%--PERSON CARD--%>
 
 <div class="tableDiv">
     <c:choose>
@@ -105,11 +270,13 @@
     <a style="color: yellow" href="/all">Back to List</a>
 
 </div>
+    <%--/PERSON CARD--%>
+
 
 </c:when>
 <c:otherwise>
     <table>
-        <a href="/all" class="headLink">PERSONS</a>
+            <%--        <a href="/all" class="headLink">PERSONS</a>--%>
 
         <c:if test="${personsCount > 0}">
             <tr class="headTable">
@@ -122,7 +289,7 @@
             </tr>
             <c:forEach var="persons" items="${personsList}">
                 <tr class="mainTable">
-                    <td>${persons.id}</td>
+                    <td style="text-align: center; color: yellow; width:5% ">${persons.id}</td>
                     <td>${persons.name}</td>
                     <td>${persons.surname}</td>
                     <td>${persons.birthDate}</td>
@@ -130,11 +297,12 @@
                     <td>
                         <c:if test="${not empty pageContext.request.userPrincipal}">
                             <c:if test="${pageContext.request.isUserInRole('ROLE_ADMIN')}">
-                                <a style="color: yellow" href="/edit/${persons.id}">edit</a>
-                                <a style="color: yellow" href="/delete/${persons.id}">delete</a>
+                                <a href="/edit/${persons.id}" class="editButton"></a>
+                                <a href="/delete/${persons.id}" class="delete"></a>
                             </c:if>
                         </c:if>
-                        <a style="color: yellow" href="/show/${persons.id}">show</a>
+                        <a class="show" href="/show/${persons.id}"></a>
+
                     </td>
                 </tr>
 
@@ -153,7 +321,6 @@
 </c:choose>
 
 </div>
-
 
 </body>
 </html>

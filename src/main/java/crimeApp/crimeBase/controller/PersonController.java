@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
@@ -82,6 +83,8 @@ public class PersonController {
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ModelAndView allPersons(@RequestParam(defaultValue = "1") int page) {
         List<Person> personList = personService.allPersons(page);
+
+
         log("all", "look");
         int personsCount = personService.personsCount();
         ModelAndView modelAndView = new ModelAndView();
@@ -89,8 +92,9 @@ public class PersonController {
         modelAndView.addObject("personsList", personList);
         modelAndView.addObject("personsCount", personsCount);
         modelAndView.addObject("personAddMenu", false);
+
         this.page = page;
-        return modelAndView;
+        return wanted(modelAndView);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
@@ -107,7 +111,7 @@ public class PersonController {
         modelAndView.addObject("CrimeActionList", crimeList);
         modelAndView.setViewName("allPersons");
 
-        return modelAndView;
+        return wanted(modelAndView);
     }
 
 
@@ -134,7 +138,7 @@ public class PersonController {
         modelAndView.addObject("personMenu", person);
         modelAndView.addObject("personMenuValid", true);
         modelAndView.addObject("personsCount", personsCount);
-        return modelAndView;
+        return wanted(modelAndView);
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
@@ -146,19 +150,40 @@ public class PersonController {
         String base64Image = Base64.getEncoder().encodeToString(imageBytes);
         ModelAndView modelAndView = StandartRequest(person);
         modelAndView.addObject("img", base64Image);
-        return modelAndView;
+        return wanted(modelAndView);
     }
 
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
-    public ModelAndView edit(@RequestParam("file") MultipartFile file, ModelMap modelMap, @RequestParam String name,
-                             String surname, String date, String crime, int id) throws IOException, ParseException {
+    public ModelAndView edit(@RequestParam(value = "file") MultipartFile file, ModelMap modelMap, @RequestParam String name,
+                             String surname, String date, String crime, int id, String connections) throws IOException, ParseException {
 
         ModelAndView modelAndView = new ModelAndView();
         Person person = new Person(name, surname, crime);
         person.setId(id);
         person.setBirthDate(date);
         person.setPhoto(file.getBytes());
+
+        String prevConnections=personService.getById(id).getPersonConnections();
+
+        if (!connections.isEmpty()) {
+            if (prevConnections == null) {
+                person.setPersonConnections(connections);
+            } else {
+                String[] string = prevConnections.split("-");
+                List<String> list = Arrays.asList(string);
+                if (!list.contains(connections)) {
+                    person.setPersonConnections(prevConnections  + "-" + connections);
+                } else {
+                    person.setPersonConnections(prevConnections);
+                }
+            }
+        }
+
+        if (file.isEmpty()) {
+            person.setPhoto(personService.getById(id).getPhoto());
+        }
+
 
         log("/edit", "Edited Person " + person.getSurname() + " " + person.getName());
         personService.edit(person);
@@ -177,7 +202,7 @@ public class PersonController {
         modelAndView.addObject("page", page);
         Person person = personService.getById(id);
         personService.delete(person);
-        return modelAndView;
+        return wanted(modelAndView);
     }
 
 
@@ -189,7 +214,7 @@ public class PersonController {
         modelAndView.setViewName("allPersons");
         modelAndView.addObject("personsList", personList);
         modelAndView.addObject("personsCount", personList.size());
-        return modelAndView;
+        return wanted(modelAndView);
 
     }
 
@@ -199,17 +224,9 @@ public class PersonController {
         List<UserLog> userLogs = userLogService.usersActions();
         modelAndView.addObject("LogList", userLogs);
         modelAndView.setViewName("admin/admin");
-        return modelAndView;
+        return wanted(modelAndView);
     }
 
-    @RequestMapping(value = "/upload", method = RequestMethod.GET)
-    public ModelAndView upload(@ModelAttribute("message") String message) {
-        ModelAndView modelAndView = new ModelAndView();
-        Person person = new Person();
-        modelAndView.addObject("person", person);
-        modelAndView.setViewName("admin/upload");
-        return modelAndView;
-    }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView login(@ModelAttribute("message") String message) {
@@ -228,25 +245,43 @@ public class PersonController {
 
     private ModelAndView StandartRequest(Person person) {
 
+
         ModelAndView modelAndView = new ModelAndView();
         int CrimeID = Integer.parseInt(person.getCrimes());
         Crime crime = crimeService.getByID(CrimeID);
         List<Crime> crimeList = crimeService.getAllCrimes();
+        List<Person> personList = personService.allPersons(1);
+        modelAndView.addObject("personsList", personList);
         modelAndView.addObject("crime", crime);
         modelAndView.addObject("personMenu", person);
         modelAndView.addObject("personMenuValid", true);
         modelAndView.addObject("personAddMenu", true);
         modelAndView.addObject("CrimeActionList", crimeList);
         modelAndView.addObject("person", person);
+
         modelAndView.setViewName("allPersons");
         return modelAndView;
     }
 
     private void log(String pageName, String action) {
+
         authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = currentUserName(authentication);
         java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
         userLogService.add(new UserLog(name, pageName, action, sqlDate));
+    }
+
+    private ModelAndView  wanted( ModelAndView modelAndView )
+    {
+
+        Person person;
+        person=personService.getById(91);
+        byte[] imageBytes = person.getPhoto();
+        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+        modelAndView.addObject("wanted", person);
+        modelAndView.addObject("imgs", base64Image);
+        return modelAndView;
+
     }
 
 }

@@ -25,4 +25,8 @@ public interface PersonDAO {
 
     boolean checkPerson(String name, String surname);
 
+    String getPersonConnections(int id);
+
+//    void setPersonConnections(int id, String connection);
+
 }

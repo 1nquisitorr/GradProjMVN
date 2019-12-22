@@ -33,6 +33,18 @@ public class Person {
     @Column(name = "photo")
     private byte[] photo;
 
+    @Column(name = "PersonConnections")
+    private String PersonConnections;
+
+
+    public String getPersonConnections() {
+        return PersonConnections;
+    }
+
+    public void setPersonConnections(String personConnections) {
+        PersonConnections = personConnections;
+    }
+
     public byte[] getPhoto() {
         return photo;
     }
@@ -50,7 +62,6 @@ public class Person {
     public Person() {
 
     }
-
 
 
     public int getId() {

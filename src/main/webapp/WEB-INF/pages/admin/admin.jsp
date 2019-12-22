@@ -9,6 +9,10 @@
     <link href="<c:url value="/res/css/style.css"/>" rel="stylesheet" type="text/css"/>
 </head>
 
+</div>
+
+
+
 <body>
 <div class="tableDiv" style="width: 100%">
     <table>

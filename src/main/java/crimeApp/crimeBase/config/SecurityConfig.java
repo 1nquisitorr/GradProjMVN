@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                  .defaultSuccessUrl("/all")
                 .and().exceptionHandling()
                 .accessDeniedPage("/login")
-                .and().logout().logoutSuccessUrl("/login")
+                .and().logout().logoutSuccessUrl("/login?logout_successful=1")
                 .and().csrf();
 
     }

@@ -81,5 +81,17 @@ public class PersonServiceImpl implements PersonService {
         return p != null;
     }
 
+    @Override
+    @Transactional
+    public String getPersonConnections(int id) {
+        return personDAO.getPersonConnections(id);
+    }
+
+//    @Override
+//    @Transactional
+//    public void setPersonConnections(int id, String connection) {
+//        personDAO.setPersonConnections(id,connection);
+//    }
+
 
 }

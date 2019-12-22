@@ -1,7 +1,6 @@
 package crimeApp.crimeBase.dao;
 
 import crimeApp.crimeBase.model.Person;
-import crimeApp.crimeBase.model.UserLog;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
-import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -83,8 +81,14 @@ public class PersonDAOImpl implements PersonDAO {
 
     @Override
     public Person getPersonByName(String name) throws Exception {
-      return person.stream().filter(u->u.getName().equals(name)).findAny().orElse(null);
+        return person.stream().filter(u -> u.getName().equals(name)).findAny().orElse(null);
     }
+
+    @Override
+    public String getPersonConnections(int id) {
+        return getById(id).getPersonConnections();
+    }
+
 
 
 }
