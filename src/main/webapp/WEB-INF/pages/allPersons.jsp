@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/resources/demos/style.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
     <script>
         $(function () {
             $("#datepicker").datepicker();
@@ -19,6 +20,47 @@
         $(function () {
             $("#datepicker2").datepicker();
         });
+
+    </script>
+
+
+    <script>
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('.image-upload-wrap').hide();
+
+                    $('.file-upload-image').attr('src', e.target.result);
+                    $('.file-upload-content').show();
+
+                    $('.image-title').html(input.files[0].name);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+
+            } else {
+                removeUpload();
+            }
+        }
+
+        function removeUpload() {
+            $('.file-upload-input').replaceWith($('.file-upload-input').clone());
+            $('.file-upload-content').hide();
+            $('.image-upload-wrap').show();
+        }
+
+        $('.image-upload-wrap').bind('dragover', function () {
+            $('.image-upload-wrap').addClass('image-dropping');
+        });
+        $('.image-upload-wrap').bind('dragleave', function () {
+            $('.image-upload-wrap').removeClass('image-dropping');
+        });
+
+
     </script>
 
 
@@ -39,49 +81,6 @@
 </ul>
 
 <div class="infoWindow">
-
-
-    <%--            <form action="${empty person.name ? addUrl : editUrl}?${_csrf.parameterName}=${_csrf.token}" method="POST"--%>
-    <%--                  enctype="multipart/form-data">--%>
-    <%--                <c:choose>--%>
-    <%--                    <c:when test="${!empty person.name}">--%>
-    <%--                        <p>Edit Person</p>--%>
-    <%--                        <input type="hidden" name="id" value="${person.id}">--%>
-    <%--                    </c:when>--%>
-    <%--                    <c:otherwise>--%>
-    <%--                        <p>Add new Person: </p>--%>
-    <%--                    </c:otherwise>--%>
-    <%--                </c:choose>--%>
-
-    <%--                <p><input class="inputString" type="text" name="name" placeholder="Name" value="${person.name}"--%>
-    <%--                          maxlength="30" required>--%>
-    <%--                <p><input class="inputString" type="text" name="surname" placeholder="Last Name"--%>
-    <%--                          value="${person.surname}" maxlength="30"--%>
-    <%--                          required>--%>
-    <%--                <p><input type="date" id="datepicker" name="date"></p>--%>
-    <%--                <p><select name="crime">--%>
-    <%--                    <c:forEach var="crime" items="${CrimeActionList}">--%>
-    <%--                        <option value=${crime.id}>${crime.description}</option>--%>
-    <%--                        &lt;%&ndash;                        <h3>${crime.id}</h3>>&ndash;%&gt;--%>
-    <%--                    </c:forEach>--%>
-    <%--                </select></p>--%>
-
-    <%--                <p><select name="connections">--%>
-    <%--                    <c:forEach var="connections" items="${personsList}">--%>
-    <%--                        <option value=${connections.id}>${connections.surname}</option>--%>
-    <%--                    </c:forEach>--%>
-    <%--                </select></p>--%>
-    <%--                <p>--%>
-    <%--                    <c:set value="add" var="add"/>--%>
-    <%--                    <c:set value="edit" var="edit"/>--%>
-    <%--                    <input type="file" name="file"/>--%>
-
-    <%--                    <input type="submit" value="${empty person.name ? add : edit}">--%>
-    <%--                </p>--%>
-    <%--                <p>${message}</p>--%>
-
-    <%--                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>--%>
-    <%--            </form>--%>
 
     <c:choose>
     <c:when test="${personAddMenu == true}">
@@ -127,11 +126,12 @@
                             </div>
                         </div>
 
-
                         <div class="form-group">
                             <p><input class="form-control" type="text" id="datepicker" name="date"
                                       placeholder=${date}></p>
                         </div>
+
+
                         <div class="form-group">
                             <label class="col-md-3 col-sm-2 control-label">Crimes</label>
                             <div class="col-md-9 col-sm-10">
@@ -161,13 +161,38 @@
                         <p>
                             <c:set value="add" var="add"/>
                             <c:set value="edit" var="edit"/>
-                            <input type="file" class="btn btn-default" name="file"/>
                         </p>
 
                         <div class="form-group">
                             <div class="col-md-offset-3 col-sm-offset-2 col-sm-3">
-                                <input type="submit" class="btn btn-default" value="${empty person.name ? add : edit}">
-                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+
+                                <div class="file-upload"
+                                     style=" background: linear-gradient(to right,#1c1d1e 10%,#1c3f40); margin-top:30px;">
+                                    <button class="file-upload-btn" type="button"
+                                            onclick="$('.file-upload-input').trigger( 'click' )">Add Image
+                                    </button>
+
+                                    <div class="image-upload-wrap">
+                                        <input class="file-upload-input" type="file" onchange="readURL(this);"
+                                               accept="image/*"
+                                               name="file"/>
+                                        <div class="drag-text">
+                                            <h3>Image preview</h3>
+                                        </div>
+                                    </div>
+                                    <div class="file-upload-content">
+                                        <img class="file-upload-image" src="#" alt="your image"/>
+                                        <div class="image-title-wrap">
+                                            <button type="button" onclick="removeUpload()" class="remove-image">Remove
+                                                <span
+                                                        class="image-title">Uploaded Image</span></button>
+                                        </div>
+                                    </div>
+                                    <input type="submit" class="btn btn-default"
+                                           style="margin-top: 50px; margin-left: 10%; width: 80%;"
+                                           value="${empty person.name ? add : edit}">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -236,22 +261,6 @@
         </c:otherwise>
         </c:choose>
 
-
-<%--        &lt;%&ndash;WANTED CARD&ndash;%&gt;--%>
-<%--        <c:choose>--%>
-<%--            <c:when test="${personAddMenu !=true}">--%>
-<%--                <div class="wantedClass">--%>
-<%--                    <h1 style="color: yellow; text-align: center">Wanted</h1>--%>
-<%--                    <img src="data:image/jpeg;base64, ${imgs}">--%>
-<%--                    <h5>${wanted.name} ${wanted.surname}</h5>--%>
-<%--                    <h5>Date of Birth: ${wanted.birthDate}</h5>--%>
-<%--                </div>--%>
-<%--            </c:when>--%>
-<%--        </c:choose>--%>
-
-        <%--WANTED CARD--%>
-
-
     </div>
 </div>
 
@@ -261,13 +270,45 @@
 <div class="tableDiv">
     <c:choose>
     <c:when test="${personMenuValid == true}">
-    <img src="data:image/jpeg;base64, ${img}" height="300" width="250">
 
-    <h1 style="color: yellow">${personMenu.name} ${personMenu.surname}</h1>
-    <h3 style="color: yellow">${personMenu.birthDate}</h3>
-    <h2 style="color: yellow">${crime.description}</h2>
-    <h3 style="color: yellow">${crime.descriptionFull}</h3>
-    <a style="color: yellow" href="/all">Back to List</a>
+    <div class="cardMainInfo">
+        <img src="data:image/jpeg;base64, ${img}" height="300" width="250">
+    </div>
+
+    <div class="cardSuspectIn">
+
+        <div class="nameAndDate">
+
+            <p class="cardName">${personMenu.name} ${personMenu.surname}</p>
+            <p class="cardBirthDate">Date of Birth: ${personMenu.birthDate}</p>
+
+        </div>
+
+        <p class="cardCrimeName">Suspects in: <br>${crime.description}</p>
+        <p class="cardCrimeDescription">Crime description according to national Law: <br>${crime.descriptionFull}</p>
+
+        <div class="connectedPersons">
+            <p>Connected Persons: </p><br>
+            <div class="connectedPersonPhotos">
+                <c:forEach var="connectedPersonPhoto" items="${connectedPersonPhoto}">
+                    <img src="data:image/jpeg;base64, ${connectedPersonPhoto}" height="100" width="70">
+                </c:forEach>
+            </div>
+
+            <div class="connectedPersonNamesDiv">
+                <c:forEach var="connectedPerson" items="${connectedPerson}">
+                    <div class="connectedPersonNames">
+                        <a style="text-decoration: none;" href="/show/${connectedPerson.id}">${connectedPerson.name} ${connectedPerson.surname}</a>
+                    </div>
+                </c:forEach>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
 
 </div>
     <%--/PERSON CARD--%>
@@ -321,7 +362,10 @@
 </c:choose>
 
 </div>
+<div>
 
+
+</div>
 </body>
 </html>
 

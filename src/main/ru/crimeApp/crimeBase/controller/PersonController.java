@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
@@ -126,13 +127,31 @@ public class PersonController {
         int personsCount = personService.personsCount();
 
 
-        byte[] imageBytes = person.getPhoto();
-        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
-        modelAndView.addObject("img", base64Image);
+        String connections = personService.getPersonConnections(id);
+        String[] connectionsArray = connections.split("-");
+        ArrayList<Person> connectedPerson = new ArrayList<>();
+        ArrayList<String> connectedImages = new ArrayList<>();
+        for (String s : connectionsArray) {
 
-        log("show", "Show Person with ID " + String.valueOf(id));
+            connectedPerson.add(personService.getById(Integer.parseInt(s)));
+            byte[] imageBytes = personService.getById(Integer.parseInt(s)).getPhoto();
+            String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+            connectedImages.add(base64Image);
+        }
+
+
+        if (person.getPhoto() != null) {
+            byte[] imageBytes = person.getPhoto();
+            String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+            modelAndView.addObject("img", base64Image);
+        }
+
+
+        log("show", "Show Person with ID " + id);
         modelAndView.setViewName("allPersons");
 
+        modelAndView.addObject("connectedPersonPhoto", connectedImages);
+        modelAndView.addObject("connectedPerson", connectedPerson);
         modelAndView.addObject("personsList", personList);
         modelAndView.addObject("crime", crime);
         modelAndView.addObject("personMenu", person);
@@ -144,12 +163,20 @@ public class PersonController {
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public ModelAndView editPage(@PathVariable("id") int id,
                                  @ModelAttribute("message") String message) {
-        log("/edit", "Edit Page Person with ID " + String.valueOf(id));
+        log("/edit", "Edit Page Person with ID " + id);
         Person person = personService.getById(id);
-        byte[] imageBytes = person.getPhoto();
-        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
         ModelAndView modelAndView = StandartRequest(person);
-        modelAndView.addObject("img", base64Image);
+
+        if(person.getPhoto()!=null)
+        {
+            byte[] imageBytes = person.getPhoto();
+            String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+            modelAndView.addObject("img", base64Image);
+
+        }
+
+
+
         return wanted(modelAndView);
     }
 
@@ -164,7 +191,7 @@ public class PersonController {
         person.setBirthDate(date);
         person.setPhoto(file.getBytes());
 
-        String prevConnections=personService.getById(id).getPersonConnections();
+        String prevConnections = personService.getById(id).getPersonConnections();
 
         if (!connections.isEmpty()) {
             if (prevConnections == null) {
@@ -173,7 +200,7 @@ public class PersonController {
                 String[] string = prevConnections.split("-");
                 List<String> list = Arrays.asList(string);
                 if (!list.contains(connections)) {
-                    person.setPersonConnections(prevConnections  + "-" + connections);
+                    person.setPersonConnections(prevConnections + "-" + connections);
                 } else {
                     person.setPersonConnections(prevConnections);
                 }
@@ -197,7 +224,7 @@ public class PersonController {
         int personsCount = personService.personsCount();
         int page = ((personsCount - 1) % 10 == 0 && personsCount > 10 && this.page == (personsCount + 9) / 10) ?
                 this.page - 1 : this.page;
-        log("/delete", "Deleted Person with ID" + String.valueOf(id));
+        log("/delete", "Deleted Person with ID" + id);
         modelAndView.setViewName("redirect:/all");
         modelAndView.addObject("page", page);
         Person person = personService.getById(id);
@@ -223,7 +250,7 @@ public class PersonController {
         ModelAndView modelAndView = new ModelAndView();
         List<UserLog> userLogs = userLogService.usersActions();
         modelAndView.addObject("LogList", userLogs);
-        modelAndView.setViewName("admin/admin");
+        modelAndView.setViewName("/admin/admin");
         return wanted(modelAndView);
     }
 
@@ -271,11 +298,10 @@ public class PersonController {
         userLogService.add(new UserLog(name, pageName, action, sqlDate));
     }
 
-    private ModelAndView  wanted( ModelAndView modelAndView )
-    {
+    private ModelAndView wanted(ModelAndView modelAndView) {
 
         Person person;
-        person=personService.getById(91);
+        person = personService.getById(91);
         byte[] imageBytes = person.getPhoto();
         String base64Image = Base64.getEncoder().encodeToString(imageBytes);
         modelAndView.addObject("wanted", person);

@@ -407,40 +407,45 @@ html[xmlns] #menu-bar {
 }
 
 
-
-.form-bg{
-    background: linear-gradient(to right,#1c1d1e 10%,#1c3f40);
+.form-bg {
+    background: linear-gradient(to right, #1c1d1e 10%, #1c3f40);
     font-family: 'Roboto', sans-serif;
     color: #fff;
     height: 100%;
 }
-.form-horizontal .form-group{
+
+.form-horizontal .form-group {
     margin-bottom: 30px;
 }
-.form-horizontal .form-control{
+
+.form-horizontal .form-control {
     background: transparent;
-    border: 1px solid rgba(255,255,255,0.5);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     width: 75%;
     height: 33px;
     line-height: 2;
     color: #fff;
     padding: 10px 15px;
 }
-.form-horizontal .form-control:focus{
+
+.form-horizontal .form-control:focus {
     border-color: #fff;
-    box-shadow:0 1px 3px rgba(255,255,255,0.5);
+    box-shadow: 0 1px 3px rgba(255, 255, 255, 0.5);
     outline: 0 none;
 }
-.form-horizontal .form-control::-moz-placeholder{
+
+.form-horizontal .form-control::-moz-placeholder {
     color: #fff;
     opacity: 0.5;
 }
-.form-horizontal .check{
+
+.form-horizontal .check {
     display: none;
 }
-.form-horizontal .check + label{
+
+.form-horizontal .check + label {
     display: inline-block;
-    background-color: rgba(255,255,255,0.4);
+    background-color: rgba(255, 255, 255, 0.4);
     border-radius: 5px;
     padding: 10px 0;
     color: #fff;
@@ -449,20 +454,24 @@ html[xmlns] #menu-bar {
     font-size: 15px;
     margin-right: 10px;
 }
-.form-horizontal #check2 + label{
+
+.form-horizontal #check2 + label {
     margin-right: 0;
 }
-.form-horizontal .check:checked + label{
+
+.form-horizontal .check:checked + label {
     background: #fff;
     color: #0062bd;
 }
-.form-horizontal select.form-control option{
+
+.form-horizontal select.form-control option {
     color: #000;
     background: #fff;
 }
-.form-horizontal .btn{
+
+.form-horizontal .btn {
     color: #fff;
-    background: linear-gradient(to bottom,#6c7575 10%,#191e1e);
+    background: linear-gradient(to bottom, #6c7575 10%, #191e1e);
     border: 1px solid white;
     /*background-color: rgba(255,255,255,0.4);*/
 
@@ -471,11 +480,201 @@ html[xmlns] #menu-bar {
     border-radius: 5px;
     transition: all 0.2s ease 0s;
 }
-.form-horizontal .btn:hover{
-    background: linear-gradient(to top,#6c7575 10%,#191e1e);
+
+.form-horizontal .btn:hover {
+    background: linear-gradient(to top, #6c7575 10%, #191e1e);
 }
-@media only screen and (max-width: 479px){
-    .check + label{
+
+@media only screen and (max-width: 479px) {
+    .check + label {
         width: 48%;
     }
+}
+
+.file-upload {
+    background-color: #ffffff;
+    width: 100%;
+    height: 50%;
+    margin-top: 5px;
+    padding: 1px;
+}
+
+.file-upload-btn {
+    width: 60%;
+    margin: 10%;
+    color: #fff;
+    background: #1FB264;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    border-bottom: 4px solid #15824B;
+    transition: all .2s ease;
+    outline: none;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.file-upload-btn:hover {
+    background: #1AA059;
+    color: #ffffff;
+    transition: all .2s ease;
+    cursor: pointer;
+}
+
+.file-upload-btn:active {
+    border: 0;
+    transition: all .2s ease;
+}
+
+.file-upload-content {
+    display: none;
+    text-align: center;
+}
+
+.file-upload-input {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    width: 20%;
+    height: 20%;
+    outline: none;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.image-upload-wrap {
+    margin-top: 20px;
+    border: 4px dashed #1FB264;
+    position: relative;
+}
+
+/*.image-dropping,*/
+/*.image-upload-wrap:hover {*/
+/*    background-color: #1FB264;*/
+/*    border: 4px dashed #ffffff;*/
+/*}*/
+
+.image-title-wrap {
+
+    padding: 0 15px 15px 15px;
+    color: #222;
+}
+
+.drag-text {
+    text-align: center;
+}
+
+.drag-text h3 {
+    font-weight: 100;
+    text-transform: uppercase;
+    color: #15824B;
+    padding: 60px 0;
+}
+
+.file-upload-image {
+    max-height: 200px;
+    max-width: 200px;
+    margin: auto;
+    padding: 20px;
+}
+
+.remove-image {
+    width: 200px;
+    margin: 0;
+    color: #fff;
+    background: #cd4535;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    border-bottom: 4px solid #b02818;
+    transition: all .2s ease;
+    outline: none;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.remove-image:hover {
+    background: #c13b2a;
+    color: #ffffff;
+    transition: all .2s ease;
+    cursor: pointer;
+}
+
+.remove-image:active {
+    border: 0;
+    transition: all .2s ease;
+}
+
+
+.cardMainInfo {
+
+
+    position: absolute;
+    float: left;
+}
+
+
+.cardName {
+
+
+    text-align: center;
+    font-weight: bold;
+    font-style: normal;
+    font-size: 35px;
+    line-height: 40px;
+
+
+}
+
+.cardBirthDate {
+    color: #39b7af;
+    font-weight: bold;
+    font-style: normal;
+    font-size: 15px;
+    line-height: 40px;
+
+}
+
+.cardSuspectIn {
+    color: #39b7af;
+    font-weight: bold;
+    font-style: normal;
+    line-height: 25px;
+    position: absolute;
+    border-left: dotted #39b7af;;
+    padding-left: 2%;
+    height: 80%;
+    width: 50%;
+    margin-left: 400px;
+
+}
+
+.cardCrimeName {
+    color: #39b7af;
+    margin-top: 50px;
+    font-size: 15px;
+}
+
+.cardCrimeDescription {
+    color: #39b7af;
+    margin-top: 25px;
+    font-size: 15px;
+
+}
+
+.connectedPersons
+{
+margin-top: 30px;
+}
+
+.connectedPersonNames
+{
+    font-size: 10px;
+    margin-left: 50px;
+    display:inline-block;
+}
+
+.connectedPersonPhotos img
+{
+    margin-left: 50px;
 }
