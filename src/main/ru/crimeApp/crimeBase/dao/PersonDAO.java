@@ -7,7 +7,7 @@ import java.sql.Date;
 import java.util.List;
 
 public interface PersonDAO {
-    List allPersons(int page);
+    List allPersons();
 
     void add(Person person);
 
@@ -27,6 +27,6 @@ public interface PersonDAO {
 
     String getPersonConnections(int id);
 
-//    void setPersonConnections(int id, String connection);
+
 
 }

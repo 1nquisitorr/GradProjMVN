@@ -57,6 +57,7 @@ public class UserLogServiceTest {
         assert (userLogService.usersActions().get(lastEntry).getVisitedPage().equals("test"));
         assert (userLogService.usersActions().get(lastEntry).getAction().equals("testAction"));
 
+
     }
 
 }

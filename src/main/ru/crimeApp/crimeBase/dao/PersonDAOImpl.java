@@ -16,10 +16,6 @@ public class PersonDAOImpl implements PersonDAO {
     private List<Person> person;
     private String userLog;
 
-//    public PersonDAOImpl() {
-//        this.person = Arrays.asList(new Person("Alex", "Ivanov",new Date(1), "126"));
-//    }
-
 
     @Autowired
     public void setSessionFactory(SessionFactory sessionFactory) {
@@ -28,7 +24,7 @@ public class PersonDAOImpl implements PersonDAO {
 
 
     @Override
-    public List<Person> allPersons(int page) {
+    public List<Person> allPersons() {
         Session session = sessionFactory.getCurrentSession();
         return session.createQuery("from Person").list();
     }
@@ -75,7 +71,7 @@ public class PersonDAOImpl implements PersonDAO {
     public List<Person> findPerson(String findName, String findSurname, Date findDateOfBirth) {
         Session session = sessionFactory.getCurrentSession();
         Query query;
-        query = session.createQuery("from Person where name = " + "\'" + findName + "\'" + " OR surname = " + "\'" + findSurname + "\'" + " OR birthDate = " + "\'" + findDateOfBirth + "\'");
+        query = session.createQuery("from Person where Name = " + "\'" + findName + "\'" + " AND LastName = " + "\'" + findSurname + "\'" + " AND BirthDate = " + "\'" + findDateOfBirth + "\'");
         return query.list();
     }
 

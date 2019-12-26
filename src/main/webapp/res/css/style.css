@@ -641,7 +641,7 @@ html[xmlns] #menu-bar {
     font-style: normal;
     line-height: 25px;
     position: absolute;
-    border-left: dotted #39b7af;;
+    border-left: dotted #39b7af;
     padding-left: 2%;
     height: 80%;
     width: 50%;
@@ -669,6 +669,9 @@ margin-top: 30px;
 
 .connectedPersonNames
 {
+    height: 30px;
+    width: 80px;
+    text-align: center;
     font-size: 10px;
     margin-left: 50px;
     display:inline-block;

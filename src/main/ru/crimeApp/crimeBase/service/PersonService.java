@@ -6,7 +6,7 @@ import java.sql.Date;
 import java.util.List;
 
 public interface PersonService {
-    List<Person> allPersons(int page);
+    List<Person> allPersons();
 
     void add(Person person);
 
@@ -22,7 +22,7 @@ public interface PersonService {
 
     List<Person> findPerson(String findName, String findSurname, Date findDateOfBirth);
 
-    boolean checkPersonPrence(Person person) throws Exception;
+//    boolean checkPersonPrence(Person person) throws Exception;
 
     String getPersonConnections(int id);
 

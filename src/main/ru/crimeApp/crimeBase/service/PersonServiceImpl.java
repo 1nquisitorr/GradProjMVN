@@ -26,8 +26,8 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @Transactional
-    public List<Person> allPersons(int page) {
-        return personDAO.allPersons(page);
+    public List<Person> allPersons() {
+        return personDAO.allPersons();
     }
 
     @Override
@@ -73,13 +73,13 @@ public class PersonServiceImpl implements PersonService {
         return personDAO.findPerson(findName, findSurname, findDateOfBirth);
     }
 
-    @Override
-    public boolean checkPersonPrence(Person person) throws Exception {
-
-        Person p = personDAO.getPersonByName(person.getName());
-
-        return p != null;
-    }
+//    @Override
+//    public boolean checkPersonPrence(Person person) throws Exception {
+//
+//        Person p = personDAO.getPersonByName(person.getName());
+//
+//        return p != null;
+//    }
 
     @Override
     @Transactional

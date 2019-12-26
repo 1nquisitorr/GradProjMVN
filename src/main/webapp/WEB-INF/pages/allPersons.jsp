@@ -22,8 +22,6 @@
         });
 
     </script>
-
-
     <script>
 
         function readURL(input) {
@@ -59,11 +57,7 @@
         $('.image-upload-wrap').bind('dragleave', function () {
             $('.image-upload-wrap').removeClass('image-dropping');
         });
-
-
     </script>
-
-
 </head>
 
 <body class="body">
@@ -94,7 +88,6 @@
                           action="${empty person.name ? addUrl : editUrl}?${_csrf.parameterName}=${_csrf.token}"
                           method="POST" enctype="multipart/form-data">
                         <div class="form-group">
-
 
                             <c:choose>
                                 <c:when test="${!empty person.name}">
@@ -149,7 +142,9 @@
                             <label class="col-md-3 col-sm-2 control-label">Connections</label>
                             <div class="col-md-9 col-sm-10">
                                 <p><label>
+
                                     <select class="form-control" name="connections">
+                                        <option value="false">Suspect is in contact with: </option>
                                         <c:forEach var="connections" items="${personsList}">
                                             <option value=${connections.id}>${connections.surname}</option>
                                         </c:forEach>
@@ -203,18 +198,7 @@
 
         </c:when>
         <c:otherwise>
-            <%--            <form action="/checkPerson" name="person" method="POST">--%>
-
-            <%--                <p><input class="inputString" type="text" name="name" placeholder="Name" value="${Person.name}"--%>
-            <%--                          maxlength="30">--%>
-            <%--                <p><input class="inputString" type="text" name="surname" placeholder="Last Name"--%>
-            <%--                          value="${person.surname}" maxlength="30">--%>
-            <%--                <p><input type="date" id="datepicker2" name="birthDate"></p>--%>
-            <%--                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>--%>
-            <%--                <input class="button" type="submit" value="Check Person">--%>
-            <%--            </form>--%>
-
-
+<%--            CheckForm--%>
             <div class="form-bg">
                 <div class="container">
                     <div class="row">
@@ -257,6 +241,7 @@
                 </div>
             </div>
 
+            <%--            CheckForm--%>
 
         </c:otherwise>
         </c:choose>
@@ -272,7 +257,8 @@
     <c:when test="${personMenuValid == true}">
 
     <div class="cardMainInfo">
-        <img src="data:image/jpeg;base64, ${img}" height="300" width="250">
+        <img src="data:image/jpeg;base64, ${img}" height="300" width="280"><br>
+        <a href="/edit/${personMenu.id}" style="margin-top: 15px; color: #39b7af; text-decoration: none; font-size: 20px; margin-left: 45%">EDIT</a>
     </div>
 
     <div class="cardSuspectIn">
@@ -291,14 +277,15 @@
             <p>Connected Persons: </p><br>
             <div class="connectedPersonPhotos">
                 <c:forEach var="connectedPersonPhoto" items="${connectedPersonPhoto}">
-                    <img src="data:image/jpeg;base64, ${connectedPersonPhoto}" height="100" width="70">
+                    <img src="data:image/jpeg;base64, ${connectedPersonPhoto}" height="100" width="80">
                 </c:forEach>
             </div>
 
             <div class="connectedPersonNamesDiv">
                 <c:forEach var="connectedPerson" items="${connectedPerson}">
                     <div class="connectedPersonNames">
-                        <a style="text-decoration: none;" href="/show/${connectedPerson.id}">${connectedPerson.name} ${connectedPerson.surname}</a>
+                        <a style="text-decoration: none; color:#39b7af;"
+                           href="/show/${connectedPerson.id}">${connectedPerson.name} ${connectedPerson.surname}</a>
                     </div>
                 </c:forEach>
             </div>
@@ -311,13 +298,14 @@
 
 
 </div>
+
+
     <%--/PERSON CARD--%>
 
 
 </c:when>
 <c:otherwise>
     <table>
-            <%--        <a href="/all" class="headLink">PERSONS</a>--%>
 
         <c:if test="${personsCount > 0}">
             <tr class="headTable">
