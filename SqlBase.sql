@@ -1,6 +1,7 @@
 
 create database crimeBase;
 
+
 create table UserActions
 (
     id          int auto_increment
