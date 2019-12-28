@@ -66,7 +66,6 @@
     <c:if test="${pageContext.request.isUserInRole('ROLE_ADMIN')}">
         <li><a href="/add">Add new Person</a></li>
     </c:if>
-    <li><a href="#">All Photos</a></li>
     <c:if test="${pageContext.request.isUserInRole('ROLE_ADMIN')}">
         <li><a href="/admin">Log Page</a></li>
     </c:if>
@@ -313,7 +312,6 @@
                 <th>name</th>
                 <th>Last Name</th>
                 <th>Date of birth</th>
-                <th>Some Info</th>
                 <th>action</th>
             </tr>
             <c:forEach var="persons" items="${personsList}">

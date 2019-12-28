@@ -13,8 +13,7 @@ import java.util.List;
 @Repository
 public class PersonDAOImpl implements PersonDAO {
     private SessionFactory sessionFactory;
-    private List<Person> person;
-    private String userLog;
+
 
 
     @Autowired
@@ -63,7 +62,7 @@ public class PersonDAOImpl implements PersonDAO {
     public boolean checkPerson(String name, String surname) {
         Session session = sessionFactory.getCurrentSession();
         Query query;
-        query = session.createQuery("from Person where name = " + "\'" + name + "\'" + " AND surname = " + "\'" + surname + "\'");
+        query = session.createQuery(String.format("from Person where name = '%s' AND surname = '%s'", name, surname));
         return query.list().isEmpty();
     }
 
@@ -71,14 +70,10 @@ public class PersonDAOImpl implements PersonDAO {
     public List<Person> findPerson(String findName, String findSurname, Date findDateOfBirth) {
         Session session = sessionFactory.getCurrentSession();
         Query query;
-        query = session.createQuery("from Person where Name = " + "\'" + findName + "\'" + " AND LastName = " + "\'" + findSurname + "\'" + " AND BirthDate = " + "\'" + findDateOfBirth + "\'");
+        query = session.createQuery(String.format("from Person where Name = '%s' AND LastName = '%s' AND BirthDate = '%s'", findName, findSurname, findDateOfBirth));
         return query.list();
     }
 
-    @Override
-    public Person getPersonByName(String name) throws Exception {
-        return person.stream().filter(u -> u.getName().equals(name)).findAny().orElse(null);
-    }
 
     @Override
     public String getPersonConnections(int id) {

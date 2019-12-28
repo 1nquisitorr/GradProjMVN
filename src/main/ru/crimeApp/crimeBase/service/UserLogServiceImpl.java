@@ -1,6 +1,6 @@
 package crimeApp.crimeBase.service;
 
-import crimeApp.crimeBase.dao.PersonDAO;
+
 import crimeApp.crimeBase.dao.UserLogDao;
 import crimeApp.crimeBase.model.UserLog;
 import org.springframework.stereotype.Service;
