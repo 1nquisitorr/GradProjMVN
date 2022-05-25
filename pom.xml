@@ -12,7 +12,7 @@
 
 
     <properties>
-        <spring.securiry>3.2.0.RELEASE</spring.securiry>
+        <spring.securiry>5.5.7</spring.securiry>
     </properties>
 
     <dependencies>
